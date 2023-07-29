@@ -1,6 +1,8 @@
-import numpy as np
-from time import time
+import os
 
+import numpy as np
+
+from time import time
 
 Casillas = {}
 Restric = {'Filas': [],
@@ -13,7 +15,7 @@ NonDefinedBoxes = []
 
 def loadNewVals():
     global Casillas, NonDefinedBoxes
-    archivo = open('./boards/tableroImposible.txt', 'r')
+    archivo = open('boards/tableroImposible.txt', 'r')
     for pos in range(81):
         linea = archivo.readline()
         Casillas[pos] = {'dom': {int(linea[0])}, 'values': None, 'restric':
@@ -30,16 +32,17 @@ def loadNewVals():
 def setConstraints():
     global Casillas, Restric
     for i in range(0, 9):
-        ind = i*9
-        lcasillas = [ind+0, ind+1, ind+2, ind +
-                     3, ind+4, ind+5, ind+6, ind+7, ind+8]
+        ind = i * 9
+        lcasillas = [ind + 0, ind + 1, ind + 2, ind + 3,
+                     ind + 4, ind + 5, ind + 6, ind + 7, ind + 8]
         Restric['Filas'].append(lcasillas)
         for j in lcasillas:
             Casillas[j]['restric']['Fila'] = lcasillas
         lcasillas = []
 
     for i in range(0, 9):
-        lcasillas = [i+0, i+9, i+18, i+27, i+36, i+45, i+54, i+63, i+72]
+        lcasillas = [i + 0, i + 9, i + 18, i + 27,
+                     i + 36, i + 45, i + 54, i + 63, i + 72]
         Restric['Columnas'].append(lcasillas)
         for j in lcasillas:
             Casillas[j]['restric']['Columna'] = lcasillas
@@ -48,9 +51,9 @@ def setConstraints():
     for i in range(0, 3):
         posi = i * 27
         for j in range(0, 3):
-            posj = posi + (j*3)
-            lcasillas = [posj+0, posj+9, posj+18, posj+1, posj+10, posj+19,
-                         posj+2, posj+11, posj+20]
+            posj = posi + (j * 3)
+            lcasillas = [posj + 0, posj + 9, posj + 18, posj + 1, posj + 10, posj + 19,
+                         posj + 2, posj + 11, posj + 20]
             Restric['Regiones'].append(lcasillas)
             for z in lcasillas:
                 Casillas[z]['restric']['Region'] = lcasillas
@@ -72,13 +75,12 @@ def pruebaInit(Casillas, Restric):
 
 
 def showSudoku(Casillas):
-
     for i in range(9):
         ind = i * 9
-        l = [Casillas[ind+0]['dom'], Casillas[ind+1]['dom'], Casillas[ind+2]['dom'],
-             Casillas[ind+3]['dom'], Casillas[ind +
-                                              4]['dom'], Casillas[ind+5]['dom'],
-             Casillas[ind+6]['dom'], Casillas[ind+7]['dom'], Casillas[ind+8]['dom']]
+        l = [Casillas[ind + 0]['dom'], Casillas[ind + 1]['dom'], Casillas[ind + 2]['dom'],
+             Casillas[ind + 3]['dom'], Casillas[ind +
+                                                4]['dom'], Casillas[ind + 5]['dom'],
+             Casillas[ind + 6]['dom'], Casillas[ind + 7]['dom'], Casillas[ind + 8]['dom']]
         print(np.array(l))
     print("\n")
 
@@ -90,7 +92,7 @@ def posibleValues():
         L = Casillas[i]['values'].copy()
         if Casillas[i]['dom'] == {0}:
             for j in L:
-                #k = L[j]
+                # k = L[j]
                 posibleValueForGeneral(i, j)
 
 
@@ -193,12 +195,11 @@ def solve():
                     solve()
                     Casillas[i]['dom'] = {0}
             return
-    print("Sudoku resuelto: \n")
     showSudoku(Casillas)
+    input("Mas?")
 
 
 def posibleValue(Casillas, casilla, valor):
-
     if Casillas[casilla]['dom'] == {0}:
         # recorre las restricciones de filas
         for i in Casillas[casilla]['restric']['Fila']:
@@ -218,27 +219,26 @@ def posibleValue(Casillas, casilla, valor):
         return False
 
 
-# inicialización de casillas y nuevos valores
-loadNewVals()
+if __name__ == "__main__":
+    # inicialización de casillas y nuevos valores
+    loadNewVals()
 
-# inicialización de restricciones
-setConstraints()
+    # inicialización de restricciones
+    setConstraints()
 
-# verificar la inicialización de casillas es correcta
-pruebaInit(Casillas, Restric)
+    # verificar la inicialización de casillas es correcta
+    pruebaInit(Casillas, Restric)
 
-# Mostrar el sudoku
-showSudoku(Casillas)
+    # Mostrar el sudoku
+    showSudoku(Casillas)
 
+    # probar si un valor es posible
+    # print(posibleValue(Casillas,Restric,1,2))
 
-# probar si un valor es posible
-# print(posibleValue(Casillas,Restric,1,2))
-
-# solución
-start_time = time()
-graciasCamilo()
-elapsed_time = time() - start_time
-print("Elapsed time: %.10f seconds." % elapsed_time)
-
+    # solución
+    start_time = time()
+    graciasCamilo()
+    elapsed_time = time() - start_time
+    print("Elapsed time: %.10f seconds." % elapsed_time)
 
 #
